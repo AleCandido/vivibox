@@ -11,6 +11,8 @@ authors = ["Alessandro Candido <candido.ale@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9,<3.11"
 PySide6 = "^6.2.2"
+pandas = {version="^1.3.5", extras=[]}
+openpyxl = "^3.0.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
