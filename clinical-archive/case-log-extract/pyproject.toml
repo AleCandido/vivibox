@@ -1,0 +1,24 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "case-log-extract"
+version = "0.1.0"
+description = ""
+authors = ["Alessandro Candido <candido.ale@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9,<3.11"
+PySide6 = "^6.2.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+Nuitka = "^0.6.18"
+zstandard = "^0.16.0"
+
+[tool.poe.tasks]
+dev = "python src/app.py"
+build = "nuitka3 src/app.py --onefile --plugin-enable=pyside6 -o case-extract --output-dir=build"
+build-standalone = "nuitka3 src/app.py --standalone --plugin-enable=pyside6 --output-dir=build"
+clean = "rm -rf build"
