@@ -47,12 +47,13 @@ jobs:
       - name: Install project
         run: poetry install --no-interaction
       - name: Build
+        id: build
         run: |
           poetry build
-          echo "::set-env name=WHEEL::dist/*.whl"
+          echo "::set-output name=WHEEL::dist/*.whl"
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.WHEEL }}
+          name: ${{ steps.build.outputs.WHEEL }}
           path: ${{ env.working_dir }}/dist/*.whl
       - uses: actions/upload-artifact@v2
         with:
