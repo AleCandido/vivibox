@@ -68,6 +68,6 @@ jobs:
       - uses: softprops/action-gh-release@v1
         with:
           name: Check Log Extract ${{ steps.build.outputs.version }}
-          tag: check-extract-${{ steps.build.outputs.version }}
+          tag_name: check-extract-${{ steps.build.outputs.version }}
           files: |
             ~/case-extract.zip
