@@ -58,7 +58,7 @@ jobs:
         with:
           message: "Bump version"
           add: "clinical-archive/case-log-extract/pyproject.toml"
-          tag: check-extract-${{ steps.build.outputs.version }}
+          tag: case-extract-${{ steps.build.outputs.version }}
       - name: Prepare bundle
         run: |
           mkdir case-extract
@@ -68,7 +68,7 @@ jobs:
           ls ${{ github.workspace }}
       - uses: softprops/action-gh-release@v1
         with:
-          name: Check Log Extract ${{ steps.build.outputs.version }}
-          tag_name: check-extract-${{ steps.build.outputs.version }}
+          name: Case Log Extract ${{ steps.build.outputs.version }}
+          tag_name: case-log-${{ steps.build.outputs.version }}
           files: |
             ${{ github.workspace }}/case-extract.zip
