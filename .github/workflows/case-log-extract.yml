@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "clinical-archive/case-log-extract/**"
+      - ".github/workflows/case-log-extract.yml"
 
 jobs:
   build:
