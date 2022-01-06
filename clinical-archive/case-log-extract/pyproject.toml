@@ -22,6 +22,18 @@ jupyterlab = "^3.2.5"
 [tool.poe.tasks]
 dev = "python src/app.py"
 jupy = "jupyter-lab dev/"
-build = "nuitka3 src/app.py --onefile --plugin-enable=pyside6 -o case-extract --output-dir=build"
-build-standalone = "nuitka3 src/app.py --standalone --plugin-enable=pyside6 --output-dir=build"
 clean = "rm -rf build"
+
+  [tool.poe.tasks.build]
+  help = "Actual build"
+  cmd = """
+    python -m nuitka src/app.py --onefile --plugin-enable=pyside6
+    --plugin-enable=numpy -o case-extract --output-dir=build
+  """
+
+  [tool.poe.tasks.build-standalone]
+  help = "Faster test build"
+  cmd = """
+    python -m nuitka src/app.py --standalone --plugin-enable=pyside6
+    --plugin-enable=numpy --output-dir=build
+  """
