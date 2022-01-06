@@ -15,27 +15,9 @@ pandas = "^1.3.5"
 openpyxl = "^3.0.9"
 
 [tool.poetry.dev-dependencies]
-Nuitka = "^0.6.18"
-zstandard = "^0.16.0"
 jupyterlab = "^3.2.5"
 
 [tool.poe.tasks]
 dev = "python src/app.py"
 jupy = "jupyter-lab dev/"
 clean = "rm -rf build"
-
-  [tool.poe.tasks.build]
-  help = "Actual build"
-  cmd = """
-    python -m nuitka src/app.py --onefile --assume-yes-for-downloads
-    --plugin-enable=pyside6 --plugin-enable=numpy --plugin-enable=anti-bloat -o
-    case-extract --output-dir=build
-  """
-
-  [tool.poe.tasks.build-standalone]
-  help = "Faster test build"
-  cmd = """
-    python -m nuitka src/app.py --standalone --assume-yes-for-downloads
-    --plugin-enable=pyside6 --plugin-enable=numpy --plugin-enable=anti-bloat
-    --output-dir=build
-  """

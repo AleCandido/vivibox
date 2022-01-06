@@ -17,13 +17,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: [3.9]
-        include:
-          - os: ubuntu-latest
-            app-name: case-extract
-            built-name: case-extract.bin
-          - os: windows-latest
-            app-name: case-extract.exe
-            built-name: case-extract.exe
+
     defaults:
       run:
         working-directory: ${{ env.working_dir }}
@@ -54,9 +48,13 @@ jobs:
         run: poetry install --no-interaction
       - name: Build
         run: |
-          pip install poethepoet
-          poe build
+          poetry build
+          echo "::set-env name=WHEEL::dist/*.whl"
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.app-name }}
-          path: ${{ env.working_dir }}/build/${{ matrix.built-name }}
+          name: ${{ env.WHEEL }}
+          path: ${{ env.working_dir }}/dist/*.whl
+      - uses: actions/upload-artifact@v2
+        with:
+          name: app.py
+          path: ${{ env.working_dir }}/src/app.py
