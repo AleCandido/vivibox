@@ -65,9 +65,10 @@ jobs:
           mv dist/*.whl case-extract
           mv src/app.py case-extract
           zip -r ~/case-extract.zip case-extract
+          ls ~
       - uses: softprops/action-gh-release@v1
         with:
           name: Check Log Extract ${{ steps.build.outputs.version }}
           tag_name: check-extract-${{ steps.build.outputs.version }}
           files: |
-            ~/case-extract.zip
+            case-extract.zip
