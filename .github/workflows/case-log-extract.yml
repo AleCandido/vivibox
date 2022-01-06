@@ -6,6 +6,9 @@ on:
       - "clinical-archive/case-log-extract/**"
       - ".github/workflows/case-log-extract.yml"
 
+env:
+  working_dir: clinical-archive/case-log-extract
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -21,6 +24,9 @@ jobs:
           - os: windows-latest
             app-name: case-extract.exe
             built-name: case-extract.exe
+    defaults:
+      run:
+        working-dir: ${{ env.working_dir }}
 
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +46,7 @@ jobs:
           path: ~/.virtualenvs
           key: >
             ${{ runner.os }}-py-${{ steps.setup-python.outputs.python-version }}-
-            poetry-${{ hashFiles('clinical-archive/case-log-extract/poetry.lock') }}
+            poetry-${{ hashFiles(format('{0}/poetry.lock', env.working_dir)) }}
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
         if: steps.cache.outputs.cache-hit != 'true'
@@ -53,4 +59,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.app-name }}
-          path: clinical-archive/case-log-extract/build/${{ matrix.built-name }}
+          path: ${{ env.working_dir }}/build/${{ matrix.built-name }}
