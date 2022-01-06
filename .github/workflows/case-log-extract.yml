@@ -1,0 +1,55 @@
+name: Publish case-log-extract
+
+on:
+  push:
+    paths:
+      - "clinical-archive/case-log-extract/**"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: [3.9]
+        include:
+          - os: ubuntu-latest
+            app-name: case-extract
+            built-name: case-extract.bin
+          - os: windows-latest
+            app-name: case-extract.exe
+            built-name: case-extract.exe
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        id: setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install and configure Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-path: ~/.virtualenvs
+          installer-parallel: true
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: ~/.virtualenvs
+          key: >
+            ${{ runner.os }}-py-${{ steps.setup-python.outputs.python-version }}-
+            poetry-${{ hashFiles('clinical-archive/case-log-extract/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-root
+        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install project
+        run: poetry install --no-intereaction
+      - name: Build
+        run: |
+          pip install poethepoet
+          poe build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.app-name }}
+          path: clinical-archive/case-log-extract/build/${{ matrix.built-name }}
