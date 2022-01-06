@@ -50,7 +50,7 @@ jobs:
         id: build
         run: |
           poetry build
-          echo "::set-output name=WHEEL::dist/*.whl"
+          echo "::set-output name=WHEEL::$(ls dist/*.whl)"
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.build.outputs.WHEEL }}
