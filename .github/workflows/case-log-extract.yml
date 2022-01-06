@@ -72,4 +72,4 @@ jobs:
           tag_name: case-extract-${{ steps.build.outputs.version }}
           files: |
             case-extract.zip
-            install.ps1
+            ${{ env.working_dir }}/install.ps1
