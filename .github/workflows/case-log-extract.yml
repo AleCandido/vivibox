@@ -15,12 +15,14 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: [3.9]
 
     defaults:
       run:
         working-directory: ${{ env.working_dir }}
+
+    if: github.event.head_commit.message != "Bump version"
 
     steps:
       - uses: actions/checkout@v2
@@ -49,13 +51,23 @@ jobs:
       - name: Build
         id: build
         run: |
+          poetry version patch
           poetry build
-          echo "::set-output name=WHEEL::$(basename dist/*.whl)"
-      - uses: actions/upload-artifact@v2
+          echo "::set-output name=version::$(poetry version -s)"
+      - uses: EndBug/add-and-commit@v7
         with:
-          name: ${{ steps.build.outputs.WHEEL }}
-          path: ${{ env.working_dir }}/dist/*.whl
-      - uses: actions/upload-artifact@v2
+          message: "Bump version"
+          add: "clinical-archive/case-log-extract/pyproject.toml"
+          tag: check-extract-${{ steps.build.output.version }}
+      - name: Prepare bundle
+        run: |
+          mkdir case-extract
+          mv dist/*.whl case-extract
+          mv src/app.py case-extract
+          zip -r ${{ env.GITHUB_WORKSPACE }}/case-extract.zip case-extract
+      - uses: softprops/action-gh-release@v1
         with:
-          name: app.py
-          path: ${{ env.working_dir }}/src/app.py
+          name: Check Log Extract ${{ steps.build.output.version }}
+          tag: check-extract-${{ steps.build.output.version }}
+          files: |
+            case-extract.zip
