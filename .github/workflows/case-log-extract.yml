@@ -53,7 +53,7 @@ jobs:
         run: |
           poetry version patch
           poetry build
-          echo "::set-output name=version::$(poetry version -s)"
+          echo '::set-output name=version::$(poetry version -s)'
       - name: Debug
         run: |
           echo ${{ steps.build.output.version }}
