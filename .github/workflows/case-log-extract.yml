@@ -53,18 +53,12 @@ jobs:
         run: |
           poetry version patch
           poetry build
-          poetry version -s
-          echo "::set-output name=VERSION::$(poetry version -s)"
-          echo "::set-output name=WHEEL::$(basename dist/*.whl)"
-      - name: Debug
-        run: |
-          echo ${{ steps.build.output.VERSION }}
-          echo ${{ steps.build.outputs.WHEEL }}
+          echo "::set-output name=version::$(poetry version -s)"
       - uses: EndBug/add-and-commit@v7
         with:
           message: "Bump version"
           add: "clinical-archive/case-log-extract/pyproject.toml"
-          tag: ${{ format('check-extract-{0}', steps.build.output.VERSION) }}
+          tag: check-extract-${{ steps.build.outputs.version }}
       - name: Prepare bundle
         run: |
           mkdir case-extract
@@ -73,7 +67,7 @@ jobs:
           zip -r ~/case-extract.zip case-extract
       - uses: softprops/action-gh-release@v1
         with:
-          name: Check Log Extract ${{ steps.build.output.VERSION }}
-          tag: ${{ format('check-extract-{0}', steps.build.output.VERSION) }}
+          name: Check Log Extract ${{ steps.build.outputs.version }}
+          tag: check-extract-${{ steps.build.outputs.version }}
           files: |
             ~/case-extract.zip
