@@ -55,9 +55,11 @@ jobs:
           poetry build
           poetry version -s
           echo "::set-output name=VERSION::$(poetry version -s)"
+          echo "::set-output name=WHEEL::$(basename dist/*.whl)"
       - name: Debug
         run: |
           echo ${{ steps.build.output.VERSION }}
+          echo ${{ steps.build.outputs.WHEEL }}
       - uses: EndBug/add-and-commit@v7
         with:
           message: "Bump version"
