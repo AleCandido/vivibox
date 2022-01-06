@@ -64,11 +64,11 @@ jobs:
           mkdir case-extract
           mv dist/*.whl case-extract
           mv src/app.py case-extract
-          zip -r ~/case-extract.zip case-extract
-          ls ~
+          zip -r ${{ github.workspace }}/case-extract.zip case-extract
+          ls ${{ github.workspace }}
       - uses: softprops/action-gh-release@v1
         with:
           name: Check Log Extract ${{ steps.build.outputs.version }}
           tag_name: check-extract-${{ steps.build.outputs.version }}
           files: |
-            case-extract.zip
+            ${{ github.workspace }}/case-extract.zip
