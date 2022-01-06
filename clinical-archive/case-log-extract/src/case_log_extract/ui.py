@@ -140,21 +140,23 @@ class MainWindow(QtWidgets.QWidget):
 
         title = "<strong>Error..</strong>"
         subtitle = "Something has gone wrong..."
-        _tb = "".join(traceback.format_tb(exc.__traceback__))
-        if isinstance(exc, FileExistsError):
-            pass
+        if isinstance(exc, FileNotFoundError):
+            subtitle = f"Input file not found: '{self.inpicker.path()}'"
+        elif isinstance(exc, FileExistsError):
+            subtitle = f"Output file already existing: '{self.outpicker.path()}'"
         else:
+            _tb = "".join(traceback.format_tb(exc.__traceback__))
             details = f"{exc.__class__.__name__}: {exc}\n\n{_tb}"
-            dialog.setText(f"{title}<br>{subtitle}")
             dialog.setDetailedText(details)
-            dialog.setStyleSheet(
-                """QTextEdit {
-                    font-family: monospace;
-                    min-width: 600px;
-                    min-height: 150px;
-                }"""
-            )
 
-        dialog.resize(300, dialog.height())
+        dialog.setText(f"{title}<br>{subtitle}")
+
+        dialog.setStyleSheet(
+            """QTextEdit {
+                font-family: monospace;
+                min-width: 600px;
+                min-height: 150px;
+            }"""
+        )
 
         dialog.show()
