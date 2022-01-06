@@ -27,13 +27,15 @@ clean = "rm -rf build"
   [tool.poe.tasks.build]
   help = "Actual build"
   cmd = """
-    python -m nuitka src/app.py --onefile --plugin-enable=pyside6
-    --plugin-enable=numpy -o case-extract --output-dir=build
+    python -m nuitka src/app.py --onefile --assume-yes-for-downloads
+    --plugin-enable=pyside6 --plugin-enable=numpy --plugin-enable=anti-bloat -o
+    case-extract --output-dir=build
   """
 
   [tool.poe.tasks.build-standalone]
   help = "Faster test build"
   cmd = """
-    python -m nuitka src/app.py --standalone --plugin-enable=pyside6
-    --plugin-enable=numpy --output-dir=build
+    python -m nuitka src/app.py --standalone --assume-yes-for-downloads
+    --plugin-enable=pyside6 --plugin-enable=numpy --plugin-enable=anti-bloat
+    --output-dir=build
   """
