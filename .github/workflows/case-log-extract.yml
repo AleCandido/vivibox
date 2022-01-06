@@ -54,20 +54,23 @@ jobs:
           poetry version patch
           poetry build
           echo "::set-output name=version::$(poetry version -s)"
+      - name: Debug
+        run: |
+          echo ${{ steps.build.output.version }}
       - uses: EndBug/add-and-commit@v7
         with:
           message: "Bump version"
           add: "clinical-archive/case-log-extract/pyproject.toml"
-          tag: check-extract-${{ steps.build.output.version }}
+          tag: ${{ format("check-extract-{0}", steps.build.output.version) }}
       - name: Prepare bundle
         run: |
           mkdir case-extract
           mv dist/*.whl case-extract
           mv src/app.py case-extract
-          zip -r ${{ env.GITHUB_WORKSPACE }}/case-extract.zip case-extract
+          zip -r ~/case-extract.zip case-extract
       - uses: softprops/action-gh-release@v1
         with:
           name: Check Log Extract ${{ steps.build.output.version }}
-          tag: check-extract-${{ steps.build.output.version }}
+          tag: ${{ format("check-extract-{0}", steps.build.output.version) }}
           files: |
-            case-extract.zip
+            ~/case-extract.zip
